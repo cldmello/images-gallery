@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from 'react-bootstrap';
 
 const Welcome = () => (
-  <div>
+  <div className="jumbotron">
     <h1>Images Gallery</h1>
     <p>
       This is a simple application that retrieves images using the UnSplash API. Enter any search term in the Search box to begin. 
