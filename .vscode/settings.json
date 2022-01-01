@@ -6,4 +6,14 @@
   ],
   "python.defaultInterpreterPath": "api/env/bin/python3",
   "python.pythonPath": "./api/env/bin/python3",
+  "python.linting.pycodestyleEnabled": true,
+  "python.linting.pycodestyleArgs": [
+    "--max-line-length=88",
+    "--indent-size=2"
+  ],
+  "python.linting.pylintEnabled": true,
+  "python.formatting.provider": "black",
+  "[python]": {
+    "editor.formatOnSave": true
+  }
 }
