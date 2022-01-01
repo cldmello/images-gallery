@@ -1,10 +1,12 @@
 import os
 import requests
 from flask import Flask, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 
 load_dotenv()
 app = Flask(__name__)
+CORS(app)  # Cross-origin Resource Sharing enabled
 
 UNSPLASH_URL = 'https://api.unsplash.com/photos/random'
 UNSPLASH_KEY = os.environ.get('UNSPLASH_KEY', "")
