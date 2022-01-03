@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 import Header from './components/Header';
 import Search from './components/Search';
 import ImageCard from './components/ImageCard';
 import Welcome from './components/Welcome';
 import Spinner from './components/Spinner';
+import { ToastContainer, toast } from 'react-toastify';
 import { Container, Row, Col } from 'react-bootstrap';
 
 // const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
@@ -21,6 +23,7 @@ function App() {
       const res = await axios.get(`${API_URL}/images`);
       setImages(res.data || []);
       setLoading(false);
+      toast('Saved image!');
     } catch (error) {
       console.log(error);
     }
@@ -45,6 +48,7 @@ function App() {
     try {
       const res = await axios.get(`${API_URL}/new-image?query=${word}`);
       setImages([{...res.data, title: word}, ...images]);
+      toast.info(`Image found for keyword ${word.toUpperCase()}!`);
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +62,9 @@ function App() {
     try {
       const res = await axios.delete(`${API_URL}/images/${id}`);
       if (res.data?.deleted_id) {
+        const img = images.find((i) => i.id === id).title.toUpperCase();
         setImages(images.filter( (image) => image.id !== id ));
+        toast.error(`Image ${img} was deleted!`);
       }
     } catch (error) {
       console.log(error);
@@ -74,6 +80,7 @@ function App() {
         setImages(
           images.map((image) => image.id === id ? {...image, saved: true} : image)
         );
+      toast.success(`Image ${imageToSave.title.toUpperCase()} saved!`);
       }
     } catch (error) {
       console.log(error);
@@ -102,6 +109,7 @@ function App() {
       </Container>
       </>)
       }
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }
