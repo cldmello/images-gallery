@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
@@ -8,11 +8,22 @@ import Welcome from './components/Welcome';
 import { Container, Row, Col } from 'react-bootstrap';
 
 // const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
-const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5050/new-image' ;
+const API_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:5050' ;
 
 function App() {
   const [word, setWord] = useState('');
   const [images, setImages] = useState([]);
+
+  const getSavedImages = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/images`);
+      setImages(res.data || []);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => getSavedImages(), []);
   
   // console.log(images);
   // Prev: https://api.unsplash.com/photos/random/?query=${word}&client_id=${UNSPLASH_KEY}
@@ -29,7 +40,7 @@ function App() {
     //   })
     
     try {
-      const res = await axios.get(`${API_URL}?query=${word}`);
+      const res = await axios.get(`${API_URL}/new-image?query=${word}`);
       setImages([{...res.data, title: word}, ...images]);
     } catch (error) {
       console.log(error);
