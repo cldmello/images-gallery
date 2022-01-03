@@ -59,5 +59,16 @@ def images():
         return {"inserted_id": res}
 
 
+@app.route("/images/<image_id>", methods=["DELETE"])
+def delete_image(image_id):
+    if request.method == "DELETE":
+        res = images_collection.delete_one({"_id": image_id})
+        if not res:
+            return {"error": "server error, please try again"}, 500
+        if res and not res.deleted_count:
+            return {"error": "not found"}, 404
+        return {"deleted_id": image_id}
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050)
