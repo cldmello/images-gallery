@@ -1,8 +1,15 @@
 import os
 import requests
-from flask import Flask, request
+from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 from dotenv import load_dotenv
+from mongo_client import mongoClient
+
+# from bson import json_util
+# from bson.objectid import ObjectId
+
+gallery = mongoClient.gallery
+images_collection = gallery.images
 
 load_dotenv()
 app = Flask(__name__)
@@ -13,13 +20,16 @@ UNSPLASH_KEY = os.environ.get("UNSPLASH_KEY", "")
 
 if not UNSPLASH_KEY:
     raise EnvironmentError(
-        ".env file is missing or could not find environmnent variable UNSPLASH_KEY!"
+        "Environment variables .env file are missing or could not find environmnent variable UNSPLASH_KEY!"
     )
 
 
 @app.route("/")
 def hello():
     return "<h1>Hello World from Flask!</h1>"
+
+
+# app.route('/')(hello) -- Above decorator expands to this line
 
 
 @app.route("/new-image")
@@ -34,7 +44,20 @@ def new_image():
     return data
 
 
-# app.route('/')(hello) -- Above decorator expands to this line
+@app.route("/images", methods=["GET", "POST"])
+def images():
+    if request.method == "GET":
+        # read image
+        images = images_collection.find({})
+        image_list = list(images)
+        return jsonify(image_list)
+
+    if request.method == "POST":
+        image = request.get_json()
+        image["_id"] = image.get("id")
+        res = images_collection.insert_one(image).inserted_id
+        return {"inserted_id": res}
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5050)

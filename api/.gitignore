@@ -1,4 +1,8 @@
-env/*
-__pycache__/*
+# Virtualenv
+env/
 
+# Cache
+__pycache__/
+
+# Secrets and env vars
 .env
