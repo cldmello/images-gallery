@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Header from './components/Header';
 import Search from './components/Search';
@@ -15,17 +16,25 @@ function App() {
   
   // console.log(images);
   // Prev: https://api.unsplash.com/photos/random/?query=${word}&client_id=${UNSPLASH_KEY}
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = async (e) => {
     e.preventDefault();
     // console.log(word);
-    fetch(`${API_URL}?query=${word}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setImages([{...data, title: word}, ...images]);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+    // fetch(`${API_URL}?query=${word}`)
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setImages([{...data, title: word}, ...images]);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   })
+    
+    try {
+      const res = await axios.get(`${API_URL}?query=${word}`);
+      setImages([{...res.data, title: word}, ...images]);
+    } catch (error) {
+      console.log(error);
+    }
+    
     setWord('');
   };
 
